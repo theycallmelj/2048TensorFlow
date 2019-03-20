@@ -144,11 +144,26 @@ def maxTile(b):
                         if b[x][y] > i:i = b[x][y]
         return i
 def qMax(b):
-        maxt = maxTile(b)*2
-        max = maxt * math.log(maxt * .5)/math.log(2)
-        return max
-
-
+        return maxTile(b) * 2
+def reward():
+        maxleftB = score(shiftLeft(copy.deepcopy(b)))
+        maxrightB = score(shiftRight(copy.deepcopy(b)))
+        maxdownB = score(shiftDown(copy.deepcopy(b)))
+        maxupB = score(copy.deepcopy(b))
+        
+        maxScore = maxleftB
+        state = "left"
+        if maxScore < maxrightB:
+                maxScore = maxrightB
+                state = "right"
+        if maxScore < maxdownB:
+                maxScore = maxdownB
+                state = "down"
+        if maxScore < maxupB:
+                maxScore = maxupB
+                state = "up"
+        
+        return maxScore
 
 #B=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,16]]
 #B2=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,8]]
