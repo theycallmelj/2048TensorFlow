@@ -1,28 +1,39 @@
 import tensorflow as tf
-
+import board as b
 
 
 def NeuralNet():
-	input  = tf.placeholder(tf.int32, shape=[None, 16],name="Input" )
-	hiddenweights = []
-	hiddenweights=(tf.Variable(initial_value=tf.random_normal(shape=[16, 20],stddev = 0.4),  name="Hidden"))
-	for i in range(200):
-		HiddenLayer(i)	
-	outputwieghts = tf.Variable(initial_value=tf.random_normal(shape=[20, 4],stddev = 0.4),  name="Output")
+     
+        
+        inputs  = tf.placeholder(tf.float32, shape=[None, 16],name="Input" )
+        hiddenweights = []
+        hiddenweights.append(tf.Variable(initial_value=tf.random_normal(shape=[16, 20],stddev = 0.4), dtype = 'float',  name="Hidden"))
+        for i in range(199):
+        	HiddenLayer(hiddenweights, i + 1)
+        
+        outputweights = tf.Variable(initial_value=tf.random_normal(shape=[20, 4],stddev = 0.4),dtype = 'float', name="Output")
+        hiddenLayers = tf.matmul(inputs, hiddenweights[0])
+        for i in range(199):
+        	hiddenLayers = tf.matmul(hiddenLayers, hiddenweights[i+1])
 
+        output=tf.matmul(hiddenLayers, outputweights)
+        
 
-def HiddenLayer(i):
+def HiddenLayer(hiddenweights, i):
 	 callMe = "Hidden" + str(i)
-	 hiddenweights=(tf.Variable(initial_value=tf.random_normal(shape=[20, 20],stddev = 0.4),  name=callMe))
-def initNeuralNet(weights):
-	net  = []
-	for i in range(len(weights)):
-		net.append(tf.Variable([weights[i]], tf.float32))
-	init = tf.global_variables_initializer()
+	 hiddenweights.append(tf.Variable(initial_value=tf.random_normal(shape=[20, 20],stddev = 0.4), dtype = 'float',  name=callMe))
 
-	sess = tf.Session()
-	print(sess.run(init))
+def train(board, W):
+	discountRate = .7
+	qMax = discountRate*b.qMax(board) + b.reward(board)
+	learningRate = .00001
 
-NeuralNet()	
+	#l is the distance between maxQ and expected Q
+	#W is all the weigths
+	#I in theory want the diffenerce in rates to be minized due to convergence
+	gradW = tf.gradients(l,W)
+
+NeuralNet()
+print("ran")
 
 
