@@ -28,11 +28,13 @@ def numZero(b) :
                                 index+=1
         return index            
 def addNewValue(b):
-        r1 = random.randint(0,numZero(b))
+        r1 = random.randint(0,numZero(b)-1)
+        
         r2 = random.randint(1,3)
         if r2 == 3:
                 r2 = 2
         pos = zeroFromPos(r1, b)
+       
         x = pos['x']
         y = pos['y']
         b[x][y] = 2*r2
@@ -141,15 +143,27 @@ def maxTile(b):
         i = 0
         for x in range(4):
                 for y in range(4):
-                        if b[x][y] > i:i = b[x][y]
+                        if b[x][y] > i:
+                                i = b[x][y]
+                                
         return i
 def qMax(b):
         return maxTile(b) * 2
-def reward():
-        maxleftB = score(shiftLeft(copy.deepcopy(b)))
-        maxrightB = score(shiftRight(copy.deepcopy(b)))
-        maxdownB = score(shiftDown(copy.deepcopy(b)))
-        maxupB = score(copy.deepcopy(b))
+def qMultiply(par1, par2):
+        return [par1 * par2, par1 * par2, par1 * par2, par1 * par2] 
+def rewardMax(b):
+        B1 = copy.deepcopy(b)
+        B2 = copy.deepcopy(b)
+        B3 = copy.deepcopy(b)
+        B4 = copy.deepcopy(b)
+        shiftLeft(B1)
+        shiftRight(B2)
+        shiftDown(B3)
+        shiftUp(B4)
+        maxleftB = score(B1)
+        maxrightB = score(B2)
+        maxdownB = score(B3)
+        maxupB = score(B4)
         
         maxScore = maxleftB
         state = "left"
@@ -165,9 +179,29 @@ def reward():
         
         return maxScore
 
-#B=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,16]]
+def add(m1, m2):
+        return [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3]]
+def reward(b):
+        B1 = copy.deepcopy(b)
+        B2 = copy.deepcopy(b)
+        B3 = copy.deepcopy(b)
+        B4 = copy.deepcopy(b)
+        shiftLeft(B1)
+        shiftRight(B2)
+        shiftDown(B3)
+        shiftUp(B4)
+        maxleftB = score(B1)
+        maxrightB = score(B2)
+        maxdownB = score(B3)
+        maxupB = score(B4)
+        
+        return [maxleftB, maxrightB, maxdownB, maxupB]
+
+#B=newBoard()
+#addNewValue(B)
 #B2=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,8]]
-#print(doLeft(B))
+#doLeft(B)
+#print(B)
 #print(B)
 #print(score(B))
 #print(shiftLeft(B))
